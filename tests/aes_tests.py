@@ -1,9 +1,8 @@
 import unittest
-import sys
 import os
-from src.Aead import Aes
+from src.aead import Aes
 
-class TestAes(unittest.TestCase):
+class AesTests(unittest.TestCase):
     def setUp(self):
         self.key = os.urandom(32)
         self.aes = Aes(self.key)
