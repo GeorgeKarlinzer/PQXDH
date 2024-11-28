@@ -1,37 +1,27 @@
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.backends import default_backend
-import os
-from abc import ABC, abstractmethod
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
 
-class Aead(ABC):
-    def __init__(self, key: bytes):
-        if len(key) != 32:
-            raise ValueError("Key must be 32 bytes long for AES-256.")
-        self.key = key
 
-    @abstractmethod
-    def encrypt(self, plaintext: bytes):
-        pass
+def pad_message(msg: bytes) -> bytes:
+    padding_len = AES.block_size - len(msg) % AES.block_size
+    padding = bytes([padding_len] * padding_len)
+    return msg + padding
 
-    @abstractmethod
-    def decrypt(self, iv: bytes, ciphertext: bytes, tag: bytes):
-        pass
+def unpad_message(padded_message: bytes) -> bytes:
+    padding_len = padded_message[-1]
+    return padded_message[:-padding_len]
 
-class Aes(Aead):
-    def encrypt(self, plaintext: bytes):
-        iv = os.urandom(12)
-        cipher = Cipher(algorithms.AES(self.key), modes.GCM(iv), backend=default_backend())
-        encryptor = cipher.encryptor()
-        
-        ciphertext = encryptor.update(plaintext) + encryptor.finalize()
-        return iv, ciphertext, encryptor.tag
+def encrypt_msg(key: bytes, msg: bytes) -> tuple[bytes, bytes]:
+    iv = get_random_bytes(AES.block_size)
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    padded_message = pad_message(msg)
+    encrypted_message = cipher.encrypt(padded_message)
+    return iv, encrypted_message
 
-    def decrypt(self, iv: bytes, ciphertext: bytes, tag: bytes):
-        cipher = Cipher(algorithms.AES(self.key), modes.GCM(iv, tag), backend=default_backend())
-        decryptor = cipher.decryptor()
-        
-        plaintext = decryptor.update(ciphertext) + decryptor.finalize()
-        return plaintext
-    
+def decrypt_msg(key: bytes, iv: bytes, enc_msg: bytes) -> bytes:
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    decr_msg = cipher.decrypt(enc_msg) 
+    return unpad_message(decr_msg)
+
 if __name__ == '__main__':
     pass
