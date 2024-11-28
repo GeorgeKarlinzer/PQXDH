@@ -3,7 +3,7 @@ from dilithium_py.dilithium import Dilithium3
 from kyber import Kyber512
 from InitMessage import InitMessage
 from KeysBundle import Key, KeysBundle
-from aead import encrypt_msg
+from aes import encrypt_msg
 
 
 def construct_init_msg(sndr_id_sk: bytes, rsvr_ik: bytes, rsvr_bundle: KeysBundle, msg: bytes) -> InitMessage:

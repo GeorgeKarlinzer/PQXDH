@@ -1,6 +1,6 @@
 import unittest
 import os
-from src.aead import Aes
+from src.aes import Aes
 
 class AesTests(unittest.TestCase):
     def setUp(self):

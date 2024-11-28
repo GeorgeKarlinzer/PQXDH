@@ -2,7 +2,7 @@ from dilithium_py.dilithium import Dilithium3
 from kyber import Kyber512
 from KeysBundle import KeyPair, KeysBundle
 from InitMessage import InitMessage
-from aead import decrypt_msg
+from aes import decrypt_msg
 
 class Receiver():
     def __init__(self, sk: bytes) -> None:

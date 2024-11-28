@@ -1,8 +1,6 @@
 from dilithium_py.dilithium import Dilithium3
-from receiver import Receiver
-from sender import construct_init_msg
-from aead import encrypt_msg
-from Crypto.Random import get_random_bytes
+from Receiver import Receiver
+from Sender import construct_init_msg
 
 bob_pk, bob_sk = Dilithium3.keygen()
 alice_pk, alice_sk = Dilithium3.keygen()
@@ -11,7 +9,7 @@ rsv = Receiver(bob_sk)
 
 bundle = rsv.get_key_bundle()
 
-msg = b"Hello world some random long super long string"
+msg = b"Some super secret message"
 
 init_msg = construct_init_msg(alice_sk, bob_pk, bundle, msg)
 
