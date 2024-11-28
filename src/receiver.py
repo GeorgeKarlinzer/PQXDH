@@ -42,4 +42,8 @@ class Receiver():
         # decrypt message
         msg = decrypt_msg(k, init_msg.iv, init_msg.enc_msg)
 
+        # verify message signature
+        if not Dilithium3.verify(sndr_ik, msg, init_msg.msg_sig):
+            raise Exception("Signature verification failed.")
+
         return msg
